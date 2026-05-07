@@ -55,15 +55,6 @@
   --font-h3: "Space Grotesk", sans-serif;
   --font-h2: "Space Grotesk", sans-serif;
   --font-label-sm: "Inter", sans-serif;
-
-  --spacing-sm: 12px;
-  --spacing-margin: 32px;
-  --spacing-xs: 4px;
-  --spacing-gutter: 16px;
-  --spacing-lg: 40px;
-  --spacing-base: 8px;
-  --spacing-xl: 64px;
-  --spacing-md: 24px;
 }
 
 body {

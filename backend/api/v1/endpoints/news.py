@@ -11,8 +11,20 @@ async def store_news(request: NewsStoreRequest, current_user=Depends(get_current
     """
     Analyzes the news (verification & threat ranking) and stores it in MongoDB.
     """
-    document = await news_service.store_news(request.news_text, request.source_virality_score)
+    document = await news_service.store_news(
+        news_text=request.news_text, 
+        virality_score=request.source_virality_score,
+        user_id=current_user["id"]
+    )
     return document
+
+@router.get("/user/count", response_model=dict)
+async def get_user_verified_count(current_user=Depends(get_current_user)):
+    """
+    Gets the total number of news articles verified by the current user.
+    """
+    count = await news_service.collection.count_documents({"user_id": current_user["id"]})
+    return {"verified_count": count}
 
 @router.get("/top-fake-news", response_model=List[NewsItem])
 async def get_top_fake_news(limit: int = Query(10, ge=1, le=100)):

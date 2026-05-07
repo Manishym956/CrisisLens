@@ -12,6 +12,7 @@ class NewsItem(BaseModel):
     virality_score: float
     verification_result: Dict[str, Any]
     threat_ranking: Dict[str, Any]
+    user_id: Optional[str] = None
     created_at: datetime
 
     class Config:

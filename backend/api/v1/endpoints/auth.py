@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from database.mongodb import get_database
+from database.mongodb import db
+from core.config import settings
 from services.auth_service import auth_service
 from models.user import UserInDB
 from datetime import datetime
@@ -16,7 +17,7 @@ class AuthResponse(BaseModel):
     user: dict
 
 @router.post("/google", response_model=AuthResponse)
-async def google_auth(request: GoogleAuthRequest, db=Depends(get_database)):
+async def google_auth(request: GoogleAuthRequest):
     """
     Authenticate user with Google OAuth token.
     If the user doesn't exist in our DB, create them.
@@ -41,7 +42,7 @@ async def google_auth(request: GoogleAuthRequest, db=Depends(get_database)):
             detail="Google token missing email",
         )
 
-    users_collection = db["users"]
+    users_collection = db.client[settings.MONGO_DB_NAME]["users"]
     
     # 2. Check if user exists in our DB
     user_doc = await users_collection.find_one({"email": email})

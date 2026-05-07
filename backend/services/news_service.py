@@ -13,7 +13,7 @@ class NewsService:
     def collection(self):
         return db.client[settings.MONGO_DB_NAME][self.collection_name]
 
-    async def store_news(self, news_text: str, virality_score: float) -> dict:
+    async def store_news(self, news_text: str, virality_score: float, user_id: str = None) -> dict:
         # 1. Run Verification (Level 2)
         verification_result = await ai_verifier.run_verification(news_text)
         
@@ -26,6 +26,7 @@ class NewsService:
             "virality_score": virality_score,
             "verification_result": verification_result,
             "threat_ranking": threat_result,
+            "user_id": user_id,
             "created_at": datetime.now(timezone.utc)
         }
         

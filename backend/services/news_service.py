@@ -3,6 +3,7 @@ from database.mongodb import db
 from core.config import settings
 from services.ai_verifier import ai_verifier
 from services.threat_ranker import threat_ranker
+from services.websocket_manager import manager
 
 class NewsService:
     def __init__(self):
@@ -32,6 +33,11 @@ class NewsService:
         result = await self.collection.insert_one(document)
         document["_id"] = str(result.inserted_id)
         
+        # 5. Broadcast to all connected WebSocket clients (Level 8)
+        # We broadcast the threat if it was determined to be fake
+        if verification_result.get("consensus", {}).get("is_fake", False):
+            await manager.broadcast("new_fake_news_alert", document)
+            
         return document
 
     async def get_top_fake_news(self, limit: int = 10):

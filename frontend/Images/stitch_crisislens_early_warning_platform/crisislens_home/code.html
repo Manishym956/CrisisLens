@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CrisisLens | AI-Powered Early Warning Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#313445",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-surface-variant": "#b9cacb",
+                        "inverse-on-surface": "#2d2f40",
+                        "surface": "#0f1222",
+                        "primary": "#dbfcff",
+                        "on-tertiary-container": "#585d7a",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#dde1ff",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c0c5e6",
+                        "secondary-container": "#571bc1",
+                        "surface-container-highest": "#313445",
+                        "surface-container": "#1c1f2f",
+                        "on-tertiary-fixed": "#141a33",
+                        "outline": "#849495",
+                        "inverse-primary": "#006970",
+                        "on-primary": "#00363a",
+                        "on-background": "#e0e1f7",
+                        "on-surface": "#e0e1f7",
+                        "inverse-surface": "#e0e1f7",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-container-lowest": "#0a0d1c",
+                        "tertiary": "#f7f5ff",
+                        "tertiary-container": "#d3d8fa",
+                        "secondary": "#d0bcff",
+                        "on-primary-container": "#006970",
+                        "surface-bright": "#353849",
+                        "on-tertiary": "#292f49",
+                        "on-secondary-container": "#c4abff",
+                        "primary-container": "#00f0ff",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "surface-tint": "#00dbe9",
+                        "on-primary-fixed": "#002022",
+                        "primary-fixed": "#7df4ff",
+                        "primary-fixed-dim": "#00dbe9",
+                        "secondary-fixed": "#e9ddff",
+                        "outline-variant": "#3b494b",
+                        "surface-container-high": "#262939",
+                        "surface-container-low": "#181b2a",
+                        "on-secondary-fixed": "#23005c",
+                        "on-tertiary-fixed-variant": "#404561",
+                        "background": "#0f1222",
+                        "surface-dim": "#0f1222",
+                        "on-secondary": "#3c0091"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "margin": "32px",
+                        "xs": "4px",
+                        "gutter": "16px",
+                        "lg": "40px",
+                        "base": "8px",
+                        "xl": "64px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h1": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Space Grotesk"],
+                        "h2": ["Space Grotesk"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(16, 22, 47, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(0, 219, 233, 0.1) 0%, rgba(15, 18, 34, 0) 70%);
+        }
+        .cta-glow {
+            background: linear-gradient(45deg, #00f0ff, #d0bcff);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+        .cta-glow:hover {
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        .threat-pulse {
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { border-color: rgba(147, 0, 10, 0.3); }
+            50% { border-color: rgba(255, 180, 171, 0.8); }
+            100% { border-color: rgba(147, 0, 10, 0.3); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/15 shadow-2xl shadow-primary/5">
+<div class="flex justify-between items-center px-margin py-base w-full max-w-full">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary" data-icon="security">security</span>
+<span class="font-h2 text-h2 font-bold tracking-tighter text-primary">CrisisLens</span>
+</div>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-primary font-bold font-label-sm text-label-sm hover:text-primary transition-colors duration-300" href="#">Overview</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors duration-300" href="#">Technology</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors duration-300" href="#">Network Status</a>
+<button class="cta-glow px-md py-xs rounded-full text-on-primary font-bold text-label-sm transition-all duration-200 active:scale-95">Go to Dashboard</button>
+</nav>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer active:scale-95 duration-200" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined md:hidden text-on-surface-variant" data-icon="menu">menu</span>
+</div>
+</div>
+</header>
+<main class="pt-xl">
+<!-- Hero Section -->
+<section class="relative min-h-[795px] flex flex-col items-center justify-center text-center px-margin hero-gradient">
+<!-- Background Globe Visual -->
+<div class="absolute inset-0 z-0 flex items-center justify-center opacity-40 pointer-events-none">
+<img alt="3D Holographic Globe" class="w-full max-w-4xl animate-pulse" data-alt="A massive, high-tech 3D holographic globe centered in a dark cybernetic environment. The globe is constructed from glowing cyan data points and neural network lines, emitting a soft blue light that illuminates a dark glass floor. Floating data particles and digital artifacts surround the sphere, creating a sense of global information surveillance. The aesthetic is ultra-modern and cinematic with deep space backgrounds and vibrant cyan accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8YfB30lIaoUE8g9gZ914pzqeLY70LrEAEycAq1t5wJg5KbXg8Zwu7LK1YUKdA5iLeDHvcMO2TjFIcB94JTHTzIhsCOtV_eWIpXHMVy0lQ9aN_kka5ybYgPuNqIXHDg5dOCYyOos6NGR8mvjxosZ5tmX0nlpIj2jm4pD4a3er78WPzeTjCfvQp6Erhp9YbVvQx2ThKaGUcUgR-DNM0ATsa7RTw6QNPePdAqZrGhUZ5XmT8YJgInoVsgLX9Y9dMrkpeacJUlHiqwcY"/>
+</div>
+<div class="relative z-10 max-w-4xl">
+<div class="inline-flex items-center gap-xs px-sm py-xs rounded-full bg-secondary-container/20 border border-primary/20 mb-md">
+<span class="w-2 h-2 rounded-full bg-primary-container threat-pulse"></span>
+<span class="font-data-mono text-data-mono text-primary-fixed uppercase">Real-time Global Surveillance Active</span>
+</div>
+<h1 class="font-h1 text-h1 text-on-surface mb-md leading-none">
+                    Not just a fake-news detector.<br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-container to-secondary">An AI-Powered Early Warning Platform.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-xl">
+                    Deploying military-grade consensus algorithms to identify, predict, and neutralize misinformation campaigns before they go viral.
+                </p>
+<div class="flex flex-col sm:flex-row gap-gutter justify-center">
+<button class="cta-glow px-xl py-md rounded-lg font-h3 text-h3 text-on-primary flex items-center justify-center gap-sm group">
+                        Go to Dashboard
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="glass-panel px-xl py-md rounded-lg font-h3 text-h3 text-primary border border-outline-variant/30 hover:bg-surface-variant/30 transition-all">
+                        View API Protocol
+                    </button>
+</div>
+</div>
+<!-- Stats Bar -->
+<div class="absolute bottom-10 w-full max-w-6xl px-margin hidden lg:grid grid-cols-4 gap-lg">
+<div class="glass-panel p-md rounded-xl text-left">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-xs">Active Nodes</p>
+<p class="font-h3 text-h3 text-primary">4,821 <span class="text-sm font-data-mono text-primary-fixed">+12%</span></p>
+</div>
+<div class="glass-panel p-md rounded-xl text-left">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-xs">Detection Latency</p>
+<p class="font-h3 text-h3 text-primary">142ms <span class="text-sm font-data-mono text-on-tertiary-container">Optimal</span></p>
+</div>
+<div class="glass-panel p-md rounded-xl text-left">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-xs">Threats Neutralized</p>
+<p class="font-h3 text-h3 text-primary">892k <span class="text-sm font-data-mono text-primary-fixed">Last 24h</span></p>
+</div>
+<div class="glass-panel p-md rounded-xl text-left">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-xs">Consensus Accuracy</p>
+<p class="font-h3 text-h3 text-primary">99.98% <span class="text-sm font-data-mono text-on-tertiary-container">Verified</span></p>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-xl px-margin max-w-7xl mx-auto">
+<div class="text-center mb-xl">
+<h2 class="font-h2 text-h2 text-on-surface mb-base">Platform Capabilities</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">The architecture of next-gen cognitive defense.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Multi-AI Consensus -->
+<div class="md:col-span-8 glass-panel p-lg rounded-xl flex flex-col justify-between group overflow-hidden relative">
+<div class="relative z-10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="hub">hub</span>
+</div>
+<h3 class="font-h2 text-h2 text-on-surface mb-sm">Multi-AI Consensus</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Our proprietary Neural-Link™ aggregates analysis from 12 distinct LLMs to eliminate bias and ensure maximum verification integrity.</p>
+</div>
+<div class="absolute right-0 bottom-0 opacity-10 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-[200px]" data-icon="cloud_sync">cloud_sync</span>
+</div>
+</div>
+<!-- Real-time Alerts -->
+<div class="md:col-span-4 glass-panel p-lg rounded-xl border-error/20 threat-pulse flex flex-col items-center text-center">
+<div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center mb-md border border-error/30">
+<span class="material-symbols-outlined text-error text-3xl" data-icon="emergency_home">emergency_home</span>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-sm">Real-time Alerts</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Instant push notifications for emerging misinformation spikes within your geofence.</p>
+</div>
+<!-- Predictive Engine -->
+<div class="md:col-span-4 glass-panel p-lg rounded-xl hover:border-primary/40 transition-colors">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-md border border-secondary/20">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="trending_up">trending_up</span>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-sm">Predictive Engine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Forecast the viral potential of news cycles before they peak using advanced sentiment trend mapping.</p>
+</div>
+<!-- Deepfake Lab -->
+<div class="md:col-span-8 glass-panel p-lg rounded-xl flex items-center gap-lg group">
+<div class="flex-shrink-0">
+<div class="w-16 h-16 rounded-xl bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary text-4xl" data-icon="visibility">visibility</span>
+</div>
+</div>
+<div>
+<h3 class="font-h2 text-h2 text-on-surface mb-sm">Deepfake Lab</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Identify synthetic audio and video with pixel-level forensics and spectral analysis tools.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-xl px-margin">
+<div class="max-w-5xl mx-auto glass-panel p-xl rounded-2xl text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
+<div class="relative z-10">
+<h2 class="font-h1 text-h1 text-on-surface mb-md">Ready to secure the truth?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-2xl mx-auto">Join the decentralized node network and start monitoring global narratives with CrisisLens AI.</p>
+<button class="cta-glow px-xl py-md rounded-lg font-h3 text-h3 text-on-primary">Establish Secure Connection</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl border-t border-outline-variant/5 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin max-w-7xl mx-auto gap-md">
+<div class="flex items-center gap-base">
+<span class="font-data-mono text-data-mono text-primary uppercase tracking-widest">CrisisLens Intelligence</span>
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 CrisisLens Intelligence. Secure Node Active.</p>
+<div class="flex gap-lg">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">API Status</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Privacy Protocol</a>
+</div>
+</div>
+</footer>
+</body></html>

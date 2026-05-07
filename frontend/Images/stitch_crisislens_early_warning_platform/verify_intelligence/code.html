@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "surface-variant": "#313445",
+                  "secondary-fixed-dim": "#d0bcff",
+                  "on-surface-variant": "#b9cacb",
+                  "inverse-on-surface": "#2d2f40",
+                  "surface": "#0f1222",
+                  "primary": "#dbfcff",
+                  "on-tertiary-container": "#585d7a",
+                  "error-container": "#93000a",
+                  "tertiary-fixed": "#dde1ff",
+                  "on-secondary-fixed-variant": "#5516be",
+                  "on-error-container": "#ffdad6",
+                  "tertiary-fixed-dim": "#c0c5e6",
+                  "secondary-container": "#571bc1",
+                  "surface-container-highest": "#313445",
+                  "surface-container": "#1c1f2f",
+                  "on-tertiary-fixed": "#141a33",
+                  "outline": "#849495",
+                  "inverse-primary": "#006970",
+                  "on-primary": "#00363a",
+                  "on-background": "#e0e1f7",
+                  "on-surface": "#e0e1f7",
+                  "inverse-surface": "#e0e1f7",
+                  "on-primary-fixed-variant": "#004f54",
+                  "surface-container-lowest": "#0a0d1c",
+                  "tertiary": "#f7f5ff",
+                  "tertiary-container": "#d3d8fa",
+                  "secondary": "#d0bcff",
+                  "on-primary-container": "#006970",
+                  "surface-bright": "#353849",
+                  "on-tertiary": "#292f49",
+                  "on-secondary-container": "#c4abff",
+                  "primary-container": "#00f0ff",
+                  "error": "#ffb4ab",
+                  "on-error": "#690005",
+                  "surface-tint": "#00dbe9",
+                  "on-primary-fixed": "#002022",
+                  "primary-fixed": "#7df4ff",
+                  "primary-fixed-dim": "#00dbe9",
+                  "secondary-fixed": "#e9ddff",
+                  "outline-variant": "#3b494b",
+                  "surface-container-high": "#262939",
+                  "surface-container-low": "#181b2a",
+                  "on-secondary-fixed": "#23005c",
+                  "on-tertiary-fixed-variant": "#404561",
+                  "background": "#0f1222",
+                  "surface-dim": "#0f1222",
+                  "on-secondary": "#3c0091"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "sm": "12px",
+                  "margin": "32px",
+                  "xs": "4px",
+                  "gutter": "16px",
+                  "lg": "40px",
+                  "base": "8px",
+                  "xl": "64px",
+                  "md": "24px"
+          },
+          "fontFamily": {
+                  "data-mono": ["Inter"],
+                  "body-md": ["Inter"],
+                  "h1": ["Space Grotesk"],
+                  "body-lg": ["Inter"],
+                  "h3": ["Space Grotesk"],
+                  "h2": ["Space Grotesk"],
+                  "label-sm": ["Inter"]
+          },
+          "fontSize": {
+                  "data-mono": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                  "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                  "h1": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                  "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                  "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                  "label-sm": ["12px", {"lineHeight": "1", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-panel {
+      background: rgba(16, 22, 47, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+    .neon-border-focus:focus-within {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+      border-color: rgba(0, 240, 255, 0.5);
+    }
+    .threat-pulse {
+      box-shadow: 0 0 15px #ffb4ab;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/15 shadow-2xl shadow-primary/5">
+<div class="flex justify-between items-center px-margin py-base w-full max-w-full">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-h2" data-icon="security">security</span>
+<h1 class="font-h2 text-h2 font-bold tracking-tighter text-primary">CrisisLens</h1>
+</div>
+<div class="flex items-center gap-md">
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="#">Dashboard</a>
+<a class="text-primary font-bold transition-colors duration-300 font-label-sm text-label-sm" href="#">Verify News</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="#">Deepfake Lab</a>
+</nav>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary active:scale-95 duration-200" data-icon="notifications">notifications</button>
+</div>
+</div>
+</header>
+<!-- Side Navigation Drawer -->
+<aside class="fixed left-0 top-0 h-full w-xl fixed left-0 top-0 h-full w-xl bg-surface-container-lowest/80 backdrop-blur-2xl border-r border-outline-variant/10 shadow-xl hidden lg:flex flex-col py-xl px-gutter z-40">
+<div class="mb-xl">
+<h3 class="font-h3 text-h3 text-primary-fixed">CrisisLens AI</h3>
+</div>
+<nav class="flex flex-col gap-base">
+<div class="flex items-center gap-gutter text-on-surface-variant p-sm hover:bg-surface-variant/30 hover:text-primary-fixed transition-all cursor-pointer group rounded-lg">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Overview</span>
+</div>
+<div class="flex items-center gap-gutter bg-secondary-container/20 text-primary border-r-2 border-primary-container p-sm cursor-pointer group rounded-lg">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-body-md text-body-md">Verify News</span>
+</div>
+<div class="flex items-center gap-gutter text-on-surface-variant p-sm hover:bg-surface-variant/30 hover:text-primary-fixed transition-all cursor-pointer group rounded-lg">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span class="font-body-md text-body-md">Predictions</span>
+</div>
+<div class="flex items-center gap-gutter text-on-surface-variant p-sm hover:bg-surface-variant/30 hover:text-primary-fixed transition-all cursor-pointer group rounded-lg">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+<span class="font-body-md text-body-md">Deepfake Lab</span>
+</div>
+<div class="mt-auto flex items-center gap-gutter text-on-surface-variant p-sm hover:bg-surface-variant/30 hover:text-primary-fixed transition-all cursor-pointer group rounded-lg">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Canvas -->
+<main class="pt-xl lg:pl-xl min-h-screen">
+<div class="max-w-7xl mx-auto px-margin py-xl space-y-lg">
+<!-- Page Header -->
+<header class="space-y-xs">
+<h2 class="font-h2 text-h2 text-primary font-bold">Verify News Intelligence</h2>
+<p class="text-on-surface-variant text-body-lg">Cross-reference information across the global AI consensus engine.</p>
+</header>
+<!-- Input Zone Bento Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Text Analysis Input -->
+<div class="lg:col-span-2 glass-panel p-md rounded-xl space-y-md neon-border-focus transition-all">
+<div class="flex items-center justify-between">
+<label class="font-data-mono text-data-mono text-primary flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]" data-icon="article">article</span>
+              CONTENT ANALYSIS
+            </label>
+<span class="text-label-sm text-on-surface-variant">4500 chars remaining</span>
+</div>
+<textarea class="w-full h-48 bg-surface-container-low/50 border border-outline-variant/30 rounded-lg p-md text-on-surface focus:ring-1 focus:ring-primary-container focus:outline-none transition-all resize-none" placeholder="Paste news article transcript or suspicious text here for deep analysis..."></textarea>
+<div class="flex flex-col md:flex-row gap-gutter">
+<div class="flex-grow glass-panel bg-surface-container-highest/20 rounded-lg flex items-center px-md border border-outline-variant/20 focus-within:border-primary-container/50">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm" data-icon="link">link</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface py-sm" placeholder="URL Endpoint (Optional)" type="text"/>
+</div>
+<button class="relative overflow-hidden bg-gradient-to-r from-primary-container to-secondary-container text-on-primary-fixed px-xl py-sm font-bold rounded-lg group transition-transform active:scale-95">
+<span class="relative z-10 flex items-center gap-sm">
+<span class="material-symbols-outlined" data-icon="search_check">search_check</span>
+                Analyze Threat
+              </span>
+<div class="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+</button>
+</div>
+</div>
+<!-- Media Uploader & Threat Meter -->
+<div class="flex flex-col gap-gutter">
+<!-- File Uploader -->
+<div class="glass-panel p-md rounded-xl flex-grow border-dashed border-2 border-outline-variant/40 flex flex-col items-center justify-center text-center group hover:border-primary-container/60 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-xl text-primary mb-sm group-hover:scale-110 transition-transform" data-icon="upload_file">upload_file</span>
+<p class="font-data-mono text-data-mono text-on-surface">DRAG MEDIA ANALYTICS</p>
+<p class="text-label-sm text-on-surface-variant mt-xs">Deepfake detection support</p>
+</div>
+<!-- Threat Score Meter -->
+<div class="glass-panel p-md rounded-xl flex flex-col items-center justify-center space-y-sm bg-error-container/5 border-error/20">
+<h4 class="font-data-mono text-data-mono text-error">THREAT LEVEL</h4>
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-error" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="36.4" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-h2 font-bold text-error">9.2</span>
+<span class="text-[10px] font-bold text-error tracking-widest">CRITICAL</span>
+</div>
+<div class="absolute inset-0 rounded-full threat-pulse opacity-50 animate-pulse"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Consensus Grid -->
+<section class="space-y-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+<h3 class="font-h3 text-h3 text-on-surface">Intelligence Consensus</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- OpenAI Card -->
+<div class="glass-panel p-md rounded-xl border-l-4 border-error space-y-md">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="robot_2">robot_2</span>
+</div>
+<div>
+<p class="font-data-mono text-data-mono text-primary">OpenAI GPT-4o</p>
+<p class="text-[10px] text-on-surface-variant">Linguistic Pattern Matching</p>
+</div>
+</div>
+<span class="px-sm py-xs bg-error/20 text-error text-label-sm rounded-full font-bold">FAKE</span>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Confidence</span>
+<span class="text-primary">94.2%</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[94%]"></div>
+</div>
+</div>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">Reasoning: Detected structural anomalies consistent with known state-sponsored disinformation frameworks. Semantic inconsistencies found in paragraph 3.</p>
+</div>
+<!-- Gemini Card -->
+<div class="glass-panel p-md rounded-xl border-l-4 border-error space-y-md">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="google_plus_reshare">google_plus_reshare</span>
+</div>
+<div>
+<p class="font-data-mono text-data-mono text-primary">Google Gemini Pro</p>
+<p class="text-[10px] text-on-surface-variant">Cross-Reference Validation</p>
+</div>
+</div>
+<span class="px-sm py-xs bg-error/20 text-error text-label-sm rounded-full font-bold">FAKE</span>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Confidence</span>
+<span class="text-primary">88.7%</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[88%]"></div>
+</div>
+</div>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">Reasoning: Metadata indicates origin from a high-risk server node. Narrative conflicts with 14 verified primary sources in the last 24 hours.</p>
+</div>
+<!-- Groq Card -->
+<div class="glass-panel p-md rounded-xl border-l-4 border-primary space-y-md">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+</div>
+<div>
+<p class="font-data-mono text-data-mono text-primary">Groq LPU-1</p>
+<p class="text-[10px] text-on-surface-variant">Real-time Inference Engine</p>
+</div>
+</div>
+<span class="px-sm py-xs bg-primary/20 text-primary text-label-sm rounded-full font-bold">REAL?</span>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Confidence</span>
+<span class="text-primary">52.1%</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[52%]"></div>
+</div>
+</div>
+<p class="text-label-sm text-on-surface-variant leading-relaxed">Reasoning: Low confidence in determination. Analysis flags certain phrases as potential satire rather than deliberate misinformation.</p>
+</div>
+</div>
+</section>
+<!-- Consensus Engine Logic Card -->
+<section class="glass-panel p-xl rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-md opacity-20">
+<span class="material-symbols-outlined text-[120px]" data-icon="memory">memory</span>
+</div>
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-xl">
+<div class="space-y-sm">
+<h4 class="font-data-mono text-data-mono text-primary flex items-center gap-xs">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+              CONSENSUS ENGINE LOGIC
+            </h4>
+<div class="flex items-center gap-md">
+<div class="px-md py-sm bg-error/10 border border-error/30 rounded-lg">
+<span class="font-h3 text-h3 text-error">FAKE</span>
+</div>
+<span class="text-h3 font-bold text-on-surface-variant">+</span>
+<div class="px-md py-sm bg-error/10 border border-error/30 rounded-lg">
+<span class="font-h3 text-h3 text-error">FAKE</span>
+</div>
+<span class="text-h3 font-bold text-on-surface-variant">+</span>
+<div class="px-md py-sm bg-primary/10 border border-primary/30 rounded-lg">
+<span class="font-h3 text-h3 text-primary">REAL</span>
+</div>
+<span class="text-h3 font-bold text-on-surface-variant">=</span>
+<div class="px-xl py-sm bg-error border-2 border-error/50 rounded-xl shadow-lg shadow-error/20">
+<span class="font-h3 text-h3 text-on-error">THREAT DETECTED</span>
+</div>
+</div>
+</div>
+<div class="max-w-sm text-right">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest mb-xs">Inference Conclusion</p>
+<p class="text-body-md text-on-surface">The engine has determined a 92% probability of information warfare. This content has been flagged for automated moderator review.</p>
+</div>
+</div>
+</section>
+<!-- Knowledge Base / Deepfake Check -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="glass-panel p-md rounded-xl flex items-center gap-md">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-tech digital security interface background with glowing neon circuitry and binary code overlays. The aesthetic is cyber-defense professional with deep blues and glowing cyan accents. Cinematic lighting highlights the complexity of the data visualization." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpBAK9-ErSJuhCGotKbeaP_rGrwon3jGT3OCtyn8sRzNAwMZly6UYZj5n9c6DSzDs1x6kwUdOWPtNWdFIDcMh7GfWRToE3HDgeWNWN5RHO5J2ssyw-l9ZoYKvwpvShZbScINB637NJ6DHb5bZxR6MNdPuxZxtbcIJ6AzCEBgAplI6xFuIb95exUPmknbQjSza47uYEm3jMLamTw5ZAYQdJXCXSmz1Uop7DCAf5yj-xzOIM5EJMPlCktSanFL0zAUewZR6sECxrFAY"/>
+</div>
+<div>
+<h5 class="font-h3 text-h3 text-primary text-body-md">Media Deepfake Scan</h5>
+<p class="text-label-sm text-on-surface-variant">Check for visual artifacts and AI-generated voice patterns.</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-on-surface-variant hover:text-primary cursor-pointer" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="glass-panel p-md rounded-xl flex items-center gap-md">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A futuristic globe visualization displaying real-time information streams as glowing lines connecting major cities. The dark navy background emphasizes the vibrant light-blue data connections, representing global intelligence networks and information flows in a highly technical and modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcVTbLqFTicrSxLnb2ZFIEBokijRszuGBJvtKWLPCeq2ZP8gYMzHc6Rs0ZeV38S3M67PdjTRotXW2qeHuP4INpEkMcsmfTa3NJy18iqTdIoSxJNQ9Vl0hnzEPaSHoU4E7heOFRaEK0euA5ve4b2L0G1cgFCnjzYMavHBk-joY8NROyQgO4-UGcbrPaEvOcheql4UIy3bAJX2Bbxth4kmH4kbxrN_PgYiiu056ypQoIdV9A5v9GTz6PskGOxA5naOyXM0N9wZyzP_E"/>
+</div>
+<div>
+<h5 class="font-h3 text-h3 text-primary text-body-md">Source Node Map</h5>
+<p class="text-label-sm text-on-surface-variant">Geopolitical origin and dissemination network analysis.</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-on-surface-variant hover:text-primary cursor-pointer" data-icon="chevron_right">chevron_right</span>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl bg-surface-container-lowest border-t border-outline-variant/5">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin max-w-7xl mx-auto">
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 CrisisLens Intelligence. Secure Node Active.</p>
+<div class="flex gap-md mt-md md:mt-0">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-container transition-colors underline-offset-4 hover:underline" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-container transition-colors underline-offset-4 hover:underline" href="#">API Status</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary-container transition-colors underline-offset-4 hover:underline" href="#">Privacy Protocol</a>
+</div>
+</div>
+</footer>
+</body></html>

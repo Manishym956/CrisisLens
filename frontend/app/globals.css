@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-surface-variant: #313445;
+  --color-secondary-fixed-dim: #d0bcff;
+  --color-on-surface-variant: #b9cacb;
+  --color-inverse-on-surface: #2d2f40;
+  --color-surface: #0f1222;
+  --color-primary: #dbfcff;
+  --color-on-tertiary-container: #585d7a;
+  --color-error-container: #93000a;
+  --color-tertiary-fixed: #dde1ff;
+  --color-on-secondary-fixed-variant: #5516be;
+  --color-on-error-container: #ffdad6;
+  --color-tertiary-fixed-dim: #c0c5e6;
+  --color-secondary-container: #571bc1;
+  --color-surface-container-highest: #313445;
+  --color-surface-container: #1c1f2f;
+  --color-on-tertiary-fixed: #141a33;
+  --color-outline: #849495;
+  --color-inverse-primary: #006970;
+  --color-on-primary: #00363a;
+  --color-on-background: #e0e1f7;
+  --color-inverse-surface: #e0e1f7;
+  --color-on-primary-fixed-variant: #004f54;
+  --color-surface-container-lowest: #0a0d1c;
+  --color-tertiary: #f7f5ff;
+  --color-tertiary-container: #d3d8fa;
+  --color-secondary: #d0bcff;
+  --color-on-primary-container: #006970;
+  --color-surface-bright: #353849;
+  --color-on-tertiary: #292f49;
+  --color-on-secondary-container: #c4abff;
+  --color-primary-container: #00f0ff;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-surface-tint: #00dbe9;
+  --color-on-primary-fixed: #002022;
+  --color-primary-fixed: #7df4ff;
+  --color-primary-fixed-dim: #00dbe9;
+  --color-secondary-fixed: #e9ddff;
+  --color-outline-variant: #3b494b;
+  --color-surface-container-high: #262939;
+  --color-surface-container-low: #181b2a;
+  --color-on-secondary-fixed: #23005c;
+  --color-on-tertiary-fixed-variant: #404561;
+  --color-background: #0f1222;
+  --color-surface-dim: #0f1222;
+  --color-on-secondary: #3c0091;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-data-mono: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-h1: "Space Grotesk", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-h3: "Space Grotesk", sans-serif;
+  --font-h2: "Space Grotesk", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
+
+  --spacing-sm: 12px;
+  --spacing-margin: 32px;
+  --spacing-xs: 4px;
+  --spacing-gutter: 16px;
+  --spacing-lg: 40px;
+  --spacing-base: 8px;
+  --spacing-xl: 64px;
+  --spacing-md: 24px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  min-height: max(884px, 100dvh);
+}
+
+.glass-panel {
+  background: rgba(16, 22, 47, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(0, 219, 233, 0.1) 0%, rgba(15, 18, 34, 0) 70%);
+}
+
+.cta-glow {
+  background: linear-gradient(45deg, #00f0ff, #d0bcff);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.cta-glow:hover {
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.threat-pulse {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { border-color: rgba(147, 0, 10, 0.3); }
+  50% { border-color: rgba(255, 180, 171, 0.8); }
+  100% { border-color: rgba(147, 0, 10, 0.3); }
 }

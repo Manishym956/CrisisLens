@@ -22,7 +22,7 @@ class AIVerifier:
         Analyze the following news excerpt and determine its authenticity.
         Respond ONLY with a valid JSON object in the following format:
         {{
-            "is_fake": boolean,
+            "is_fake": boolean, // Strictly evaluate as true or false. (true = FAKE NEWS, false = LEGIT NEWS)
             "reasoning": "brief explanation",
             "confidence_score": float between 0.0 and 1.0
         }}

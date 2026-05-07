@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 export default function PredictionsPage() {
@@ -11,7 +11,7 @@ export default function PredictionsPage() {
   useEffect(() => {
     const fetchPredictions = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/predictions/");
+        const res = await axios.get("/api/v1/predictions/");
         // Check if there's enough data (the API returns {message: "Not enough data"} if db is empty)
         if (res.data.error || res.data.message) {
           toast(res.data.error || res.data.message, { icon: '⚠️' });

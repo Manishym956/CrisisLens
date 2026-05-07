@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from typing import List
 from api.v1.schemas.news import NewsStoreRequest, NewsItem
 from services.news_service import news_service
+from api.deps import get_current_user
 
 router = APIRouter()
 
 @router.post("/store-news", response_model=NewsItem)
-async def store_news(request: NewsStoreRequest):
+async def store_news(request: NewsStoreRequest, current_user=Depends(get_current_user)):
     """
     Analyzes the news (verification & threat ranking) and stores it in MongoDB.
     """

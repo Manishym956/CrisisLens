@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 export default function VerifyNewsPage() {
@@ -19,7 +19,7 @@ export default function VerifyNewsPage() {
     const loadingToast = toast.loading("Analyzing Threat via Consensus Engine...");
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/news/store-news", {
+      const response = await axios.post("/api/v1/news/store-news", {
         news_text: newsText,
         source_virality_score: 0.85
       });

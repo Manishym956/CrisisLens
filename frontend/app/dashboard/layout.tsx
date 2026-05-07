@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -67,7 +68,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Main Canvas */}
       <main className="pt-xl lg:pl-xl min-h-screen">
-        {children}
+        <ProtectedRoute>
+          {children}
+        </ProtectedRoute>
       </main>
 
       {/* Footer */}

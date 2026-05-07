@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
     GROQ_API_KEY: Optional[str] = None
+
+    # OAuth & Security
+    GOOGLE_CLIENT_ID: Optional[str] = None
+    JWT_SECRET_KEY: str = "default_insecure_secret_key"
+    JWT_ALGORITHM: str = "HS256"
     
     class Config:
         env_file = ".env"

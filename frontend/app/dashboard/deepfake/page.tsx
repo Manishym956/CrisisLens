@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 export default function DeepfakeLabPage() {
@@ -33,7 +33,7 @@ export default function DeepfakeLabPage() {
     formData.append("file", selectedImage);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/deepfake/detect", formData, {
+      const response = await axios.post("/api/v1/deepfake/detect", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

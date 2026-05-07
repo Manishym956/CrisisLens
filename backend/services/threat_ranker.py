@@ -35,12 +35,19 @@ class ThreatRanker:
         
         total_threat = (panic_score * 0.4) + (political_score * 0.3) + (virality_score * 0.3)
         
-        # Determine Classification
-        if total_threat >= 0.75:
+        # Determine ranking on a 1 to 10 scale (1 = Most Critical, 10 = Least Critical)
+        # We invert the 0.0 -> 1.0 total_threat score:
+        # total_threat 1.0 -> Rank 1
+        # total_threat 0.0 -> Rank 10
+        raw_rank = 10 - (total_threat * 9)
+        final_rank = max(1, min(10, round(raw_rank)))
+        
+        # Determine Classification based on the 1-10 rank
+        if final_rank <= 3:
             classification = "CRITICAL"
-        elif total_threat >= 0.50:
+        elif final_rank <= 5:
             classification = "HIGH"
-        elif total_threat >= 0.25:
+        elif final_rank <= 8:
             classification = "MEDIUM"
         else:
             classification = "LOW"
@@ -49,7 +56,8 @@ class ThreatRanker:
             "panic_score": round(panic_score, 2),
             "political_score": round(political_score, 2),
             "virality_score": round(virality_score, 2),
-            "total_threat_score": round(total_threat, 2),
+            "total_threat_score": final_rank, # Now passing the 1-10 rank
+            "raw_threat_probability": round(total_threat, 2), # Keep the raw 0-1 probability for analytics if needed
             "risk_classification": classification,
             "matched_panic_keywords": matched_panic,
             "matched_political_keywords": matched_pol

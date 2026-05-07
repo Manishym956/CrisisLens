@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 export default function DashboardOverviewPage() {
@@ -13,7 +13,7 @@ export default function DashboardOverviewPage() {
     // Fetch Top Fake News from persistent storage
     const fetchTopThreats = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/v1/news/top-fake-news?limit=5");
+        const response = await axios.get("/api/v1/news/top-fake-news?limit=5");
         setTopThreats(response.data);
       } catch (error) {
         console.error("Error fetching top threats", error);

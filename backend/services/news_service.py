@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from database.mongodb import db
 from core.config import settings
+from core.logger import logger
 from services.ai_verifier import ai_verifier
 from services.threat_ranker import threat_ranker
 from services.websocket_manager import manager
@@ -33,12 +34,34 @@ class NewsService:
         # 4. Save to MongoDB
         result = await self.collection.insert_one(document)
         document["_id"] = str(result.inserted_id)
-        
-        # 5. Broadcast to all connected WebSocket clients (Level 8)
-        # We broadcast the threat if it was determined to be fake
-        if verification_result.get("consensus", {}).get("is_fake", False):
+
+        # 5. Auto-Dispatch based on Threat Rank
+        rank = threat_result.get("total_threat_score", 10)
+        is_fake = verification_result.get("consensus", {}).get("is_fake", False)
+
+        if is_fake:
+            if rank <= 2:
+                # CRITICAL — Fire emergency email immediately in background
+                from services.automation import automation_service
+                import asyncio
+                asyncio.ensure_future(
+                    automation_service.send_emergency_email(news_text, rank, threat_result)
+                )
+                logger.info(f"[DISPATCH] Rank {rank} — Emergency email queued.")
+
+            elif rank <= 6:
+                # HIGH/MEDIUM — Post to Discord in background
+                from services.automation import automation_service
+                import asyncio
+                asyncio.ensure_future(
+                    automation_service.post_to_discord(news_text, rank, threat_result)
+                )
+                logger.info(f"[DISPATCH] Rank {rank} — Discord post queued.")
+
+        # 6. Broadcast to all connected WebSocket clients
+        if is_fake:
             await manager.broadcast("new_fake_news_alert", document)
-            
+
         return document
 
     async def get_top_fake_news(self, limit: int = 10):

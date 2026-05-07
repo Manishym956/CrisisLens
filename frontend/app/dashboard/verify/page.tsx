@@ -127,18 +127,28 @@ export default function VerifyNewsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               
-              {/* Map through AI responses */}
-              {Object.entries(result.verification_result.ai_responses).map(([modelName, response]: [string, any]) => {
+              {/* Map through AI responses — backend returns {openai, gemini, groq} */}
+              {["openai", "gemini", "groq"].map((modelName) => {
+                const response = result.verification_result?.[modelName];
+                if (!response || response.error) {
+                  return (
+                    <div key={modelName} className="glass-panel p-6 rounded-xl border-l-4 border-outline-variant/30 space-y-3 opacity-50">
+                      <p className="font-data-mono text-data-mono text-primary capitalize">{modelName}</p>
+                      <p className="text-label-sm text-on-surface-variant">{response?.error || "No response"}</p>
+                    </div>
+                  );
+                }
                 const isFake = response.is_fake;
                 const colorClass = isFake ? "border-error text-error bg-error/20" : "border-primary text-primary bg-primary/20";
                 const bgFill = isFake ? "bg-error" : "bg-primary";
+                const confidence = response.confidence_score ?? response.confidence ?? 0;
                 
                 return (
                   <div key={modelName} className={`glass-panel p-6 rounded-xl border-l-4 ${isFake ? 'border-error' : 'border-primary'} space-y-6`}>
                     <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center">
-                          <span className="material-symbols-outlined text-sm">{modelName.includes('openai') ? 'robot_2' : modelName.includes('gemini') ? 'google_plus_reshare' : 'bolt'}</span>
+                          <span className="material-symbols-outlined text-sm">{modelName === 'openai' ? 'robot_2' : modelName === 'gemini' ? 'google_plus_reshare' : 'bolt'}</span>
                         </div>
                         <div>
                           <p className="font-data-mono text-data-mono text-primary capitalize">{modelName}</p>
@@ -152,10 +162,10 @@ export default function VerifyNewsPage() {
                     <div className="space-y-1">
                       <div className="flex justify-between text-label-sm">
                         <span className="text-on-surface-variant">Confidence</span>
-                        <span className={isFake ? 'text-error' : 'text-primary'}>{(response.confidence * 100).toFixed(1)}%</span>
+                        <span className={isFake ? 'text-error' : 'text-primary'}>{(confidence * 100).toFixed(1)}%</span>
                       </div>
                       <div className="h-1 bg-surface-variant rounded-full overflow-hidden">
-                        <div className={`h-full ${bgFill}`} style={{ width: `${response.confidence * 100}%` }}></div>
+                        <div className={`h-full ${bgFill}`} style={{ width: `${confidence * 100}%` }}></div>
                       </div>
                     </div>
                     <p className="text-label-sm text-on-surface-variant leading-relaxed">
@@ -164,6 +174,7 @@ export default function VerifyNewsPage() {
                   </div>
                 );
               })}
+
             </div>
           </section>
 

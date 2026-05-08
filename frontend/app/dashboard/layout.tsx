@@ -18,7 +18,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link className="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="/dashboard/verify">Verify News</Link>
               <Link className="text-on-surface-variant hover:text-primary transition-colors duration-300 font-label-sm text-label-sm" href="/dashboard/deepfake">Deepfake Lab</Link>
             </nav>
-            <button className="material-symbols-outlined text-on-surface-variant hover:text-primary active:scale-95 duration-200">notifications</button>
           </div>
         </div>
       </header>

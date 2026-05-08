@@ -131,10 +131,6 @@ export default function DeepfakeLabPage() {
                     <div className="text-label-sm font-data-mono text-primary/60">CODEC: HEVC_AI</div>
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <button className="material-symbols-outlined text-primary/70 hover:text-primary transition-colors">settings_ethernet</button>
-                  <button className="material-symbols-outlined text-primary/70 hover:text-primary transition-colors">fullscreen</button>
-                </div>
               </div>
             </div>
           </div>

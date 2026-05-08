@@ -75,9 +75,13 @@ export default function DashboardOverviewPage() {
             {topThreats.length > 0 ? topThreats.map((threat, idx) => (
               <div key={idx} className="group cursor-pointer bg-surface-container/50 p-3 rounded-lg border border-outline-variant/10 hover:border-primary-container/30 transition-colors">
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-[10px] font-data-mono bg-error/20 px-1.5 py-0.5 rounded text-error uppercase">Score: {threat.total_threat_score.toFixed(1)}</span>
+                  <span className="text-[10px] font-data-mono bg-error/20 px-1.5 py-0.5 rounded text-error uppercase">
+                    Score: {Number(threat?.threat_ranking?.total_threat_score ?? threat?.total_threat_score ?? 0).toFixed(1)}
+                  </span>
                   <div className="flex items-center gap-1 text-error">
-                    <span className="text-[10px] font-data-mono">THREAT: {threat.risk_classification}</span>
+                    <span className="text-[10px] font-data-mono">
+                      THREAT: {threat?.threat_ranking?.risk_classification ?? threat?.risk_classification ?? "UNKNOWN"}
+                    </span>
                   </div>
                 </div>
                 <h4 className="font-body-md text-on-surface font-bold leading-snug group-hover:text-primary transition-colors line-clamp-2">

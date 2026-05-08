@@ -6,8 +6,13 @@ router = APIRouter()
 @router.get("/", response_model=None)
 async def get_predictions():
     """
-    Analyzes recent fake news from the database and predicts emerging 
-    misinformation trends, scam narratives, and election risks.
+    Full ML predictions: top fake today, narrative clusters,
+    emerging threats, and Groq LLM intelligence summary.
     """
-    result = await prediction_engine.generate_predictions()
-    return result
+    return await prediction_engine.generate_predictions()
+
+
+@router.get("/insights", response_model=None)
+async def get_insights():
+    """Alias for the predictions dashboard — same payload."""
+    return await prediction_engine.generate_predictions()

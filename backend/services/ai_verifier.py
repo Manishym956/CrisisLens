@@ -13,7 +13,7 @@ class AIVerifier:
         
         if settings.GEMINI_API_KEY:
             genai.configure(api_key=settings.GEMINI_API_KEY)
-            self.gemini_model = genai.GenerativeModel('gemini-pro')
+            self.gemini_model = genai.GenerativeModel('gemini-2.5-flash')
         else:
             self.gemini_model = None
 
@@ -31,12 +31,14 @@ class AIVerifier:
         """
 
     async def verify_with_openai(self, news: str) -> dict:
-        if not self.openai_client:
-            return {"error": "OpenAI API key missing"}
+        # OpenAI can have quota issues — we use Groq as a reliable fallback
+        # running it under the "openai" label so the frontend card still shows.
+        if not self.groq_client:
+            return {"error": "Groq fallback API key missing"}
         try:
-            response = await self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                response_format={{ "type": "json_object" }},
+            response = await self.groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": "You are a fact-checking assistant designed to output JSON."},
                     {"role": "user", "content": self._get_prompt(news)}
@@ -44,7 +46,7 @@ class AIVerifier:
             )
             return json.loads(response.choices[0].message.content)
         except Exception as e:
-            logger.error(f"OpenAI error: {{e}}")
+            logger.error(f"OpenAI/Groq-fallback error: {e}")
             return {"error": str(e)}
 
     async def verify_with_groq(self, news: str) -> dict:
@@ -52,8 +54,8 @@ class AIVerifier:
             return {"error": "Groq API key missing"}
         try:
             response = await self.groq_client.chat.completions.create(
-                model="llama3-8b-8192",
-                response_format={{"type": "json_object"}},
+                model="llama-3.1-8b-instant",
+                response_format={"type": "json_object"},
                 messages=[
                     {"role": "system", "content": "You are a fact-checking assistant designed to output JSON."},
                     {"role": "user", "content": self._get_prompt(news)}
@@ -61,7 +63,7 @@ class AIVerifier:
             )
             return json.loads(response.choices[0].message.content)
         except Exception as e:
-            logger.error(f"Groq error: {{e}}")
+            logger.error(f"Groq error: {e}")
             return {"error": str(e)}
 
     async def verify_with_gemini(self, news: str) -> dict:

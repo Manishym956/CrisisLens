@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
 from api.v1.schemas.verification import VerificationRequest, VerificationResponse
 from services.ai_verifier import ai_verifier
 from services.url_verifier import url_verifier_service
@@ -29,4 +29,16 @@ async def verify_url(request: URLVerifyRequest):
     - Returns a composite trust score and legitimacy verdict
     """
     result = await url_verifier_service.verify_url(request.url)
+    return result
+
+
+@router.post("/verify-image-news")
+async def verify_image_news(file: UploadFile = File(...)):
+    """
+    Verify whether uploaded image-based content is misinformation using
+    OpenAI, Gemini, and Groq vision-capable analysis (no DB storage).
+    """
+    image_bytes = await file.read()
+    mime_type = file.content_type or "image/jpeg"
+    result = await ai_verifier.run_image_verification(image_bytes, mime_type)
     return result

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 export default function DashboardOverviewPage() {
   const [topThreats, setTopThreats] = useState<any[]>([]);
   const [liveAlerts, setLiveAlerts] = useState<any[]>([]);
-  const [wsStatus, setWsStatus] = useState("Connecting...");
+  const [feedStatus, setFeedStatus] = useState("Refreshing...");
 
   useEffect(() => {
     // Fetch Top Fake News from persistent storage
@@ -21,31 +21,21 @@ export default function DashboardOverviewPage() {
     };
     fetchTopThreats();
 
-    // Connect to WebSocket
-    const ws = new WebSocket("ws://localhost:8000/api/v1/realtime/ws");
-    
-    ws.onopen = () => {
-      setWsStatus("Connected");
-    };
-
-    ws.onmessage = (event) => {
+    const fetchLiveFeed = async () => {
       try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'new_threat') {
-          toast.error(`NEW THREAT: ${data.data.risk_classification}`);
-          setLiveAlerts(prev => [data.data, ...prev].slice(0, 10)); // Keep last 10
-        }
+        const response = await axios.get("/api/v1/news/live-feed?limit=5");
+        setLiveAlerts(Array.isArray(response.data) ? response.data : []);
+        setFeedStatus("Live");
       } catch (e) {
-        console.error("Error parsing WS message", e);
+        console.error("Error fetching live feed", e);
+        setFeedStatus("Disconnected");
       }
     };
-
-    ws.onclose = () => {
-      setWsStatus("Disconnected");
-    };
+    fetchLiveFeed();
+    const interval = setInterval(fetchLiveFeed, 60000);
 
     return () => {
-      ws.close();
+      clearInterval(interval);
     };
   }, []);
 
@@ -57,8 +47,8 @@ export default function DashboardOverviewPage() {
           <p className="text-on-surface-variant font-body-lg text-body-lg">Global misinformation live tracking & threat analysis.</p>
         </div>
         <div className="flex items-center gap-1 text-label-sm font-data-mono">
-          <span className={`w-2 h-2 rounded-full ${wsStatus === 'Connected' ? 'bg-primary-container animate-pulse' : 'bg-error'}`}></span>
-          <span className={wsStatus === 'Connected' ? 'text-primary' : 'text-error'}>WS: {wsStatus}</span>
+          <span className={`w-2 h-2 rounded-full ${feedStatus === 'Live' ? 'bg-primary-container animate-pulse' : 'bg-error'}`}></span>
+          <span className={feedStatus === 'Live' ? 'text-primary' : 'text-error'}>FEED: {feedStatus}</span>
         </div>
       </header>
 
@@ -108,8 +98,12 @@ export default function DashboardOverviewPage() {
               <div key={idx} className="flex gap-6 border-l-2 border-primary-container pl-3">
                 <div className="text-on-surface-variant font-data-mono text-[10px] mt-1 whitespace-nowrap">JUST NOW</div>
                 <div>
-                  <p className="text-on-surface font-body-sm mb-1">{alert.news_text ? alert.news_text.substring(0, 80) + '...' : 'New item verified.'}</p>
-                  <p className="text-primary font-data-mono text-[10px]">RISK: {alert.risk_classification}</p>
+                  <p className="text-on-surface font-body-sm mb-1">
+                    {alert.title ? alert.title.substring(0, 120) : "Live feed item"}
+                  </p>
+                  <p className="text-primary font-data-mono text-[10px]">
+                    SOURCE: {alert.source ?? "Google News"}
+                  </p>
                 </div>
               </div>
             )) : (

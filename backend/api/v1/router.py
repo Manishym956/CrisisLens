@@ -8,7 +8,8 @@ from api.v1.endpoints import (
     realtime,
     threat,
     verification,
-    auth
+    auth,
+    profile
 )
 
 api_router = APIRouter()
@@ -22,3 +23,4 @@ api_router.include_router(predictions.router, prefix="/predictions", tags=["pred
 api_router.include_router(deepfake.router, prefix="/deepfake", tags=["deepfake"])
 api_router.include_router(automation.router, prefix="/automation", tags=["automation"])
 api_router.include_router(realtime.router, prefix="/realtime", tags=["realtime"])
+api_router.include_router(profile.router, prefix="/profile", tags=["profile"])

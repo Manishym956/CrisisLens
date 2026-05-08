@@ -1,4 +1,7 @@
 from datetime import datetime, timezone
+import re
+from urllib.parse import quote_plus
+import httpx
 from database.mongodb import db
 from core.config import settings
 from core.logger import logger
@@ -57,6 +60,25 @@ class NewsService:
                     automation_service.post_to_discord(news_text, rank, threat_result)
                 )
                 logger.info(f"[DISPATCH] Rank {rank} — Discord post queued.")
+            elif rank >= 7:
+                # LOW — optional user-level automated export dispatch
+                try:
+                    from bson import ObjectId
+                    users_collection = db.client[settings.MONGO_DB_NAME]["users"]
+                    user_doc = None
+                    if user_id:
+                        user_doc = await users_collection.find_one({"_id": ObjectId(user_id)})
+                    if user_doc and user_doc.get("settings", {}).get("automated_report_dispatch", False):
+                        recipient = user_doc.get("email")
+                        if recipient:
+                            from services.automation import automation_service
+                            import asyncio
+                            asyncio.ensure_future(
+                                automation_service.send_low_threat_export_email(recipient)
+                            )
+                            logger.info(f"[DISPATCH] Rank {rank} — Low-threat export email queued for {recipient}.")
+                except Exception as e:
+                    logger.error(f"[DISPATCH] Low-threat export dispatch check failed: {e}")
 
         # 6. Broadcast to all connected WebSocket clients
         if is_fake:
@@ -93,5 +115,50 @@ class NewsService:
             results.append(doc)
             
         return results
+
+    async def get_live_google_feed(self, limit: int = 5, query: str = "fake news OR misinformation"):
+        """
+        Fetch top Google News RSS items in-memory (no DB writes).
+        """
+        url = (
+            "https://news.google.com/rss/search"
+            f"?q={quote_plus(query)}&hl=en-IN&gl=IN&ceid=IN:en"
+        )
+        headers = {"User-Agent": "CrisisLens/1.0"}
+        try:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+                resp = await client.get(url, headers=headers)
+            if resp.status_code != 200:
+                return []
+
+            xml = resp.text
+            items = re.findall(r"<item>(.*?)</item>", xml, re.DOTALL)
+            parsed = []
+            for item in items[: max(1, min(limit, 20))]:
+                title_m = re.search(r"<title[^>]*><!\[CDATA\[(.*?)\]\]></title>|<title[^>]*>(.*?)</title>", item, re.DOTALL)
+                link_m = re.search(r"<link>(.*?)</link>", item, re.DOTALL)
+                pub_m = re.search(r"<pubDate>(.*?)</pubDate>", item, re.DOTALL)
+                source_m = re.search(r"<source[^>]*>(.*?)</source>", item, re.DOTALL)
+
+                title = (title_m.group(1) or title_m.group(2) or "").strip() if title_m else ""
+                title = re.sub(r"<[^>]+>", " ", title).strip()
+                link = link_m.group(1).strip() if link_m else ""
+                published_at = pub_m.group(1).strip() if pub_m else ""
+                source = re.sub(r"<[^>]+>", " ", source_m.group(1)).strip() if source_m else "Google News"
+
+                if not title:
+                    continue
+                parsed.append(
+                    {
+                        "title": title,
+                        "url": link,
+                        "source": source,
+                        "published_at": published_at,
+                    }
+                )
+            return parsed
+        except Exception as e:
+            logger.error(f"Google live feed fetch failed: {e}")
+            return []
 
 news_service = NewsService()

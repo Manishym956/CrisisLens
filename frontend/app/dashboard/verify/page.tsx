@@ -1,16 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 export default function VerifyNewsPage() {
+  const mediaInputRef = useRef<HTMLInputElement>(null);
   const [newsText, setNewsText] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isUrlAnalyzing, setIsUrlAnalyzing] = useState(false);
+  const [isMediaAnalyzing, setIsMediaAnalyzing] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [urlResult, setUrlResult] = useState<any>(null);
+  const [mediaResult, setMediaResult] = useState<any>(null);
 
   const handleAnalyze = async () => {
     if (!newsText.trim()) {
@@ -54,6 +58,33 @@ export default function VerifyNewsPage() {
       toast.error("URL scan failed.", { id: loadingToast });
     } finally {
       setIsUrlAnalyzing(false);
+    }
+  };
+
+  const handleMediaDrop = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please drop an image file (jpg/png/webp).");
+      return;
+    }
+
+    setIsMediaAnalyzing(true);
+    setMediaResult(null);
+    const loadingToast = toast.loading("Running image fake-news verification...");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post("/api/v1/verification/verify-image-news", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setMediaResult(response.data);
+      toast.success("Image verification complete.", { id: loadingToast });
+    } catch (e) {
+      console.error(e);
+      toast.error("Image verification failed. Ensure backend is running.", { id: loadingToast });
+    } finally {
+      setIsMediaAnalyzing(false);
     }
   };
 
@@ -120,11 +151,96 @@ export default function VerifyNewsPage() {
 
         {/* Media Uploader & Threat Meter */}
         <div className="flex flex-col gap-4">
-          <div className="glass-panel p-6 rounded-xl flex-grow border-dashed border-2 border-outline-variant/40 flex flex-col items-center justify-center text-center group hover:border-primary-container/60 transition-all cursor-pointer">
+          <div
+            className={`glass-panel p-6 rounded-xl flex-grow border-dashed border-2 flex flex-col items-center justify-center text-center group transition-all cursor-pointer ${
+              isDragActive ? "border-primary-container/80 bg-primary-container/5" : "border-outline-variant/40 hover:border-primary-container/60"
+            } ${isMediaAnalyzing ? "opacity-70" : ""}`}
+            onClick={() => !isMediaAnalyzing && mediaInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragActive(true);
+            }}
+            onDragLeave={() => setIsDragActive(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDragActive(false);
+              const f = e.dataTransfer.files?.[0];
+              if (f) void handleMediaDrop(f);
+            }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === " ") && !isMediaAnalyzing) {
+                e.preventDefault();
+                mediaInputRef.current?.click();
+              }
+            }}
+          >
+            <input
+              ref={mediaInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) void handleMediaDrop(f);
+                // reset value so selecting same file again still triggers onChange
+                e.currentTarget.value = "";
+              }}
+            />
             <span className="material-symbols-outlined text-xl text-primary mb-3 group-hover:scale-110 transition-transform text-3xl">upload_file</span>
-            <p className="font-data-mono text-data-mono text-on-surface">DRAG MEDIA ANALYTICS</p>
-            <p className="text-label-sm text-on-surface-variant mt-1">Deepfake detection support</p>
+            <p className="font-data-mono text-data-mono text-on-surface">
+              {isMediaAnalyzing ? "ANALYZING MEDIA..." : "DRAG MEDIA ANALYTICS"}
+            </p>
+            <p className="text-label-sm text-on-surface-variant mt-1">
+              {isMediaAnalyzing ? "Uploading to 3-layer AI verifier" : "Drop or click to upload image (Fake-news verification)"}
+            </p>
           </div>
+
+          {/* Media Analysis Result */}
+          {mediaResult && !mediaResult.error && (
+            <div className="glass-panel p-6 rounded-xl border border-outline-variant/10">
+              <div className="flex items-center justify-between mb-2">
+                <p className="font-data-mono text-label-sm text-on-surface-variant">MEDIA VERDICT</p>
+                <span
+                  className={`text-[10px] font-data-mono px-2 py-1 rounded uppercase border ${
+                    mediaResult?.consensus?.is_fake ? "bg-error/15 text-error border-error/30" : "bg-primary/15 text-primary border-primary/30"
+                  }`}
+                >
+                  {mediaResult?.consensus?.is_fake ? "FAKE NEWS" : "LIKELY REAL"}
+                </span>
+              </div>
+              <p className="text-on-surface font-body-sm mb-1">
+                Consensus votes: {mediaResult?.consensus?.fake_votes ?? 0}/{mediaResult?.consensus?.total_votes ?? 0} flagged fake
+              </p>
+              <p className="text-on-surface-variant text-[12px] font-data-mono">
+                Confidence: {(Number(mediaResult.confidence ?? 0) * 100).toFixed(1)}%
+              </p>
+              <div className="mt-3 space-y-1">
+                {["openai", "gemini", "groq"].map((m) => {
+                  const r = mediaResult?.[m];
+                  if (!r || r.error) {
+                    return (
+                      <p key={m} className="text-[11px] text-on-surface-variant opacity-70">
+                        {m}: unavailable
+                      </p>
+                    );
+                  }
+                  return (
+                    <p key={m} className="text-[11px] text-on-surface-variant">
+                      {m}: {r.is_fake ? "fake" : "real"} ({(Number(r.confidence_score ?? 0) * 100).toFixed(0)}%)
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {mediaResult?.error && (
+            <div className="glass-panel p-6 rounded-xl border border-error/20 bg-error/5">
+              <p className="font-data-mono text-label-sm text-error mb-1">MEDIA ERROR</p>
+              <p className="text-on-surface-variant text-[12px]">{String(mediaResult.error)}</p>
+            </div>
+          )}
 
           {/* Threat Score Meter */}
           <div className={`glass-panel p-6 rounded-xl flex flex-col items-center justify-center space-y-3 ${result ? (result.threat_ranking.risk_classification === 'CRITICAL' ? 'bg-error-container/5 border-error/20' : 'bg-primary-container/5 border-primary/20') : ''}`}>

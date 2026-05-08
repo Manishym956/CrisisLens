@@ -41,3 +41,14 @@ async def search_news(query: str, limit: int = Query(10, ge=1, le=100)):
     """
     results = await news_service.search_news(query=query, limit=limit)
     return results
+
+
+@router.get("/live-feed", response_model=list[dict])
+async def get_live_feed(
+    limit: int = Query(5, ge=1, le=20),
+    query: str = Query("fake news OR misinformation"),
+):
+    """
+    Runtime-only Google News feed for live dashboard (no DB storage).
+    """
+    return await news_service.get_live_google_feed(limit=limit, query=query)

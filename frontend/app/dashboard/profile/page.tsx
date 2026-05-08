@@ -3,16 +3,29 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import apiClient from "@/lib/axios";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
   const { user, logout } = useAuthStore();
   const [verifiedCount, setVerifiedCount] = useState<number>(0);
+  const [threatsFlagged, setThreatsFlagged] = useState<number>(0);
+  const [accuracyRate, setAccuracyRate] = useState<number>(0);
+  const [activeDays, setActiveDays] = useState<number>(1);
+  const [threatPushNotifications, setThreatPushNotifications] = useState<boolean>(true);
+  const [automatedReportDispatch, setAutomatedReportDispatch] = useState<boolean>(false);
+  const [isSavingSettings, setIsSavingSettings] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchVerifiedCount = async () => {
+    const fetchProfileData = async () => {
       try {
-        const response = await apiClient.get('/api/v1/news/user/count');
-        setVerifiedCount(response.data.verified_count);
+        const response = await apiClient.get('/api/v1/profile/analytics');
+        const data = response.data || {};
+        setVerifiedCount(Number(data.verified_count ?? 0));
+        setThreatsFlagged(Number(data.threats_flagged ?? 0));
+        setAccuracyRate(Number(data.accuracy_rate ?? 0));
+        setActiveDays(Number(data.active_days ?? 1));
+        setThreatPushNotifications(Boolean(data?.settings?.threat_push_notifications ?? true));
+        setAutomatedReportDispatch(Boolean(data?.settings?.automated_report_dispatch ?? false));
       } catch (error: any) {
         console.error("Profile API Error! URL:", error?.config?.url);
         console.error("Response:", error?.response?.data);
@@ -20,9 +33,31 @@ export default function ProfilePage() {
     };
     
     if (user) {
-      fetchVerifiedCount();
+      fetchProfileData();
     }
   }, [user]);
+
+  const persistSettings = async (nextThreatPush: boolean, nextAutoDispatch: boolean) => {
+    setIsSavingSettings(true);
+    try {
+      const response = await apiClient.patch("/api/v1/profile/settings", {
+        threat_push_notifications: nextThreatPush,
+        automated_report_dispatch: nextAutoDispatch,
+      });
+      setThreatPushNotifications(Boolean(response.data?.settings?.threat_push_notifications ?? nextThreatPush));
+      setAutomatedReportDispatch(Boolean(response.data?.settings?.automated_report_dispatch ?? nextAutoDispatch));
+      if (nextAutoDispatch && response.data?.dispatch?.status === "sent") {
+        toast.success("Automated dispatch enabled. Low-threat export email sent.");
+      } else {
+        toast.success("Settings updated.");
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to update settings.");
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-16 space-y-10">
@@ -75,15 +110,15 @@ export default function ProfilePage() {
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-lg bg-surface-container-highest/50 border border-outline-variant/20 text-center">
-              <span className="block text-h2 font-bold text-primary">142</span>
+              <span className="block text-h2 font-bold text-primary">{threatsFlagged}</span>
               <span className="text-[10px] uppercase font-data-mono text-on-surface-variant">Threats Flagged</span>
             </div>
             <div className="p-4 rounded-lg bg-surface-container-highest/50 border border-outline-variant/20 text-center">
-              <span className="block text-h2 font-bold text-secondary">98%</span>
+              <span className="block text-h2 font-bold text-secondary">{accuracyRate}%</span>
               <span className="text-[10px] uppercase font-data-mono text-on-surface-variant">Accuracy Rate</span>
             </div>
             <div className="p-4 rounded-lg bg-surface-container-highest/50 border border-outline-variant/20 text-center col-span-2 md:col-span-1">
-              <span className="block text-h2 font-bold text-tertiary">14</span>
+              <span className="block text-h2 font-bold text-tertiary">{activeDays}</span>
               <span className="text-[10px] uppercase font-data-mono text-on-surface-variant">Active Days</span>
             </div>
           </div>
@@ -100,19 +135,35 @@ export default function ProfilePage() {
                   <h4 className="font-bold text-on-surface">Threat Push Notifications</h4>
                   <p className="text-label-sm text-on-surface-variant">Receive alerts for emerging threats in your region.</p>
                 </div>
-                <div className="w-12 h-6 bg-primary rounded-full relative cursor-pointer">
-                  <div className="w-4 h-4 bg-background rounded-full absolute right-1 top-1"></div>
-                </div>
+                <button
+                  disabled={isSavingSettings}
+                  onClick={() => persistSettings(!threatPushNotifications, automatedReportDispatch)}
+                  className={`w-12 h-6 rounded-full relative transition-colors ${
+                    threatPushNotifications ? "bg-primary" : "bg-surface-variant"
+                  } ${isSavingSettings ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                >
+                  <div className={`w-4 h-4 rounded-full absolute top-1 transition-all ${
+                    threatPushNotifications ? "right-1 bg-background" : "left-1 bg-on-surface-variant"
+                  }`}></div>
+                </button>
               </div>
 
               <div className="flex items-center justify-between p-4 rounded-lg bg-surface-container-lowest border border-outline-variant/10">
                 <div>
                   <h4 className="font-bold text-on-surface">Automated Report Dispatch</h4>
-                  <p className="text-label-sm text-on-surface-variant">Automatically export daily intel to assigned authorities.</p>
+                  <p className="text-label-sm text-on-surface-variant">Send low-threat (Rank 7-10) fake-news export to your email when enabled.</p>
                 </div>
-                <div className="w-12 h-6 bg-surface-variant rounded-full relative cursor-pointer">
-                  <div className="w-4 h-4 bg-on-surface-variant rounded-full absolute left-1 top-1"></div>
-                </div>
+                <button
+                  disabled={isSavingSettings}
+                  onClick={() => persistSettings(threatPushNotifications, !automatedReportDispatch)}
+                  className={`w-12 h-6 rounded-full relative transition-colors ${
+                    automatedReportDispatch ? "bg-primary" : "bg-surface-variant"
+                  } ${isSavingSettings ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                >
+                  <div className={`w-4 h-4 rounded-full absolute top-1 transition-all ${
+                    automatedReportDispatch ? "right-1 bg-background" : "left-1 bg-on-surface-variant"
+                  }`}></div>
+                </button>
               </div>
             </div>
           </div>

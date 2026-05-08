@@ -55,7 +55,12 @@ async def google_auth(request: GoogleAuthRequest):
             picture=picture,
             role="user"
         )
-        result = await users_collection.insert_one(new_user.model_dump(by_alias=True, exclude_none=True))
+        payload = new_user.model_dump(by_alias=True, exclude_none=True)
+        payload["settings"] = {
+            "threat_push_notifications": True,
+            "automated_report_dispatch": False,
+        }
+        result = await users_collection.insert_one(payload)
         user_doc = await users_collection.find_one({"_id": result.inserted_id})
     else:
         # Optionally update user info if changed (like picture)
@@ -65,6 +70,13 @@ async def google_auth(request: GoogleAuthRequest):
         )
         user_doc["name"] = name
         user_doc["picture"] = picture
+        if "settings" not in user_doc:
+            default_settings = {
+                "threat_push_notifications": True,
+                "automated_report_dispatch": False,
+            }
+            await users_collection.update_one({"email": email}, {"$set": {"settings": default_settings}})
+            user_doc["settings"] = default_settings
 
     # Convert ObjectId to string for JWT and response
     user_id = str(user_doc.get("_id"))

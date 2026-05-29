@@ -52,8 +52,8 @@ class NewsService:
                 )
                 logger.info(f"[DISPATCH] Rank {rank} — Emergency email queued.")
 
-            elif rank <= 6:
-                # HIGH/MEDIUM — Post to Discord in background
+            elif 3 <= rank <= 6:
+                # HIGH/MEDIUM (Ranks 3-6) — Post to Discord in background
                 from services.automation import automation_service
                 import asyncio
                 asyncio.ensure_future(
